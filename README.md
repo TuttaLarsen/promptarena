@@ -81,7 +81,7 @@ flowchart TD
 ## 🚀 Быстрый старт
 1. Клонируй репозиторий
 ```bash
-git clone https://github.com/yourusername/promptarena.git
+git clone https://github.com/TuttaLarsen/promptarena.git
 cd promptarena
 ```
 2. Установи зависимости
