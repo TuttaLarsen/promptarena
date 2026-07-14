@@ -232,6 +232,33 @@ promptarena/
   "winner_id": 1
 }
 ```
+### 3. Оценить промпт (с LLM-судьей)
+
+* **URL:** `/api/prompt/evaluate`
+* **Метод:** `POST`
+* **Описание:** Отправляет промпт на выполнение в LLM и получает его оценку от LLM-судьи.
+
+#### Тело запроса (`application/json`):
+```json
+{
+  "prompt": "Ты — эксперт по автоматизации тестирования. Напиши автотест на PyTest для эндпоинта /api/login"
+}
+```
+
+#### Ответ (`200 OK`):
+```json
+{
+  "answer": "```python\nimport pytest\n...\n```",
+  "speed": 1.2,
+  "price": 0.002,
+  "prompt_tokens": 450,
+  "completion_tokens": 280,
+  "total_tokens": 730,
+  "judge_score": 8.5,
+  "judge_comment": "Чёткая инструкция, хорошо структурирован, но не хватает примера ожидаемого ответа."
+}
+```
+
 ---
 
 ## 🗄️ База данных (Supabase)
