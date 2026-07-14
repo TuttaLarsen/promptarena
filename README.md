@@ -27,43 +27,55 @@
 
 ---
 
+---
+
 ## 🧩 Архитектура
+
 ```mermaid
 flowchart TD
     User[Пользователь]
     
     subgraph UI[Браузер]
         Library[Библиотека промптов]
-        Arena[Арена: задача + выбор агентов]
+        Arena[Арена: задача + агенты]
+        Single[Оценка промпта]
     end
     
     subgraph Backend[Бекенд Node.js]
         API[POST /api/arena/compare]
+        Evaluate[POST /api/prompt/evaluate]
         DB[(PostgreSQL)]
     end
     
-    subgraph LLM[DeepSeek API]
-        Agent1[Запрос к агенту 1]
-        Agent2[Запрос к агенту 2]
-        Agent3[Запрос к агенту 3]
+    subgraph LLM[ChatAnywhere API]
+        Model[LLM: gpt-4o-mini]
         Judge[LLM-судья]
     end
     
     User --> Library
     User --> Arena
-    Arena -->|HTTP| API
-    API --> DB
-    API --> Agent1
-    API --> Agent2
-    API --> Agent3
-    Agent1 --> Judge
-    Agent2 --> Judge
-    Agent3 --> Judge
-    Judge --> API
-    API -->|сохраняет| DB
-    API -->|результат| Arena
+    User --> Single
+    
+    Arena -->|1. задача + agent_ids| API
+    Single -->|2. промпт| Evaluate
+    
+    API -->|3. запрос к каждому агенту| Model
+    Model -->|4. ответы| API
+    
+    API -->|5. ответы агентов + задача| Judge
+    Judge -->|6. оценки score/comment| API
+    
+    API -->|7. результат| Arena
+    API -->|сохранить| DB
+    
+    Evaluate -->|8. выполнить промпт| Model
+    Model -->|9. ответ| Evaluate
+    
+    Evaluate -->|10. промпт на оценку| Judge
+    Judge -->|11. оценка + комментарий| Evaluate
+    
+    Evaluate -->|12. ответ + оценка| Single
 ```
-
 ---
 
 ## 🛠️ Технологии
